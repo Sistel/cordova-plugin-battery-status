@@ -43,11 +43,34 @@ var Battery = function () {
     }
 };
 
-function handlers () {
+function handlers() {
     return (
         battery.channels.batterystatus.numHandlers + battery.channels.batterylow.numHandlers + battery.channels.batterycritical.numHandlers
     );
 }
+
+Battery._ensureBoolean = function (callback) {
+    return function (result) {
+        callback(!!result);
+    }
+};
+
+/**
+     * Checks if the device is charging.
+     * Returns true if data roaming is enabled.
+     *
+     * @param {Function} successCallback -  The callback which will be called when the operation is successful.
+     * This callback function is passed a single boolean parameter which is TRUE if device is charging.
+     * @param {Function} errorCallback -  The callback which will be called when the operation encounters an error.
+     *  This callback function is passed a single string parameter containing the error message.
+     */
+Battery.isCharging = function (successCallback, errorCallback) {
+    return exec(Battery._ensureBoolean(successCallback),
+        errorCallback,
+        'Battery',
+        'isCharging',
+        []);
+};
 
 /**
  * Event handlers for when callbacks get registered for the battery.

@@ -30,6 +30,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.BatteryManager;
 
 public class BatteryListener extends CordovaPlugin {
 
@@ -86,6 +87,11 @@ public class BatteryListener extends CordovaPlugin {
             this.sendUpdate(new JSONObject(), false); // release status callback in JS side
             this.batteryCallbackContext = null;
             callbackContext.success();
+            return true;
+        }
+
+        else if (action.equals("isCharging")) {
+            callbackContext.success(isCharging() ? 1 : 0);
             return true;
         }
 
@@ -158,5 +164,12 @@ public class BatteryListener extends CordovaPlugin {
             result.setKeepCallback(keepCallback);
             this.batteryCallbackContext.sendPluginResult(result);
         }
+    }
+
+    public boolean isCharging() {
+        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        Intent currentBatteryStatusIntent = registerReceiver(null, ifilter);
+        int batteryStatus = currentBatteryStatusIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+        return batteryStatus == BatteryManager.BATTERY_STATUS_CHARGING || batteryStatus == BatteryManager.BATTERY_STATUS_FULL;
     }
 }
