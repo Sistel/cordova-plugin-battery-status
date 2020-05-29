@@ -168,7 +168,7 @@ public class BatteryListener extends CordovaPlugin {
 
     public boolean isCharging() {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        Intent currentBatteryStatusIntent = registerReceiver(null, ifilter);
+        Intent currentBatteryStatusIntent = webView.getContext().registerReceiver(null, ifilter);
         int batteryStatus = currentBatteryStatusIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
         return batteryStatus == BatteryManager.BATTERY_STATUS_CHARGING || batteryStatus == BatteryManager.BATTERY_STATUS_FULL;
     }
