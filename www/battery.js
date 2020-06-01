@@ -49,7 +49,7 @@ function handlers() {
     );
 }
 
-Battery._ensureBoolean = function (callback) {
+Battery.prototype._ensureBoolean = function (callback) {
     return function (result) {
         callback(!!result);
     }
@@ -64,8 +64,8 @@ Battery._ensureBoolean = function (callback) {
      * @param {Function} errorCallback -  The callback which will be called when the operation encounters an error.
      *  This callback function is passed a single string parameter containing the error message.
      */
-Battery.isCharging = function (successCallback, errorCallback) {
-    return exec(Battery._ensureBoolean(successCallback),
+Battery.prototype.isCharging = function (successCallback, errorCallback) {
+    return exec(battery._ensureBoolean(successCallback),
         errorCallback,
         'Battery',
         'isCharging',
