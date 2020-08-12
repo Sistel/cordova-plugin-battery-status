@@ -95,6 +95,12 @@ public class BatteryListener extends CordovaPlugin {
             return true;
         }
 
+        else if (action.equals("getDataBatteryInfo")) {
+            callbackContext.success(getDataBatteryInfo());
+            return true;
+        }
+        
+
         return false;
     }
 
@@ -171,5 +177,19 @@ public class BatteryListener extends CordovaPlugin {
         Intent currentBatteryStatusIntent = webView.getContext().registerReceiver(null, ifilter);
         int batteryStatus = currentBatteryStatusIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
         return batteryStatus == BatteryManager.BATTERY_STATUS_CHARGING || batteryStatus == BatteryManager.BATTERY_STATUS_FULL || batteryStatus == BatteryManager.BATTERY_STATUS_NOT_CHARGING;
+    }
+
+    public JSONObject getDataBatteryInfo() {
+        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        Intent batteryIntent = webView.getContext().registerReceiver(null, ifilter);
+        JSONObject info = new JSONObject();
+        try {
+            info.put("level", batteryIntent.getIntExtra(android.os.BatteryManager.EXTRA_LEVEL, 0));
+            info.put("isPlugged", batteryIntent.getIntExtra(android.os.BatteryManager.EXTRA_PLUGGED, -1) > 0 ? true : false);
+            info.put("status", batteryIntent.getIntExtra(android.os.BatteryManager.EXTRA_STATUS, -1));
+        } catch (Exception e) {
+                LOG.e(LOG_TAG, "Error unregistering battery receiver: " + e.getMessage(), e);
+        }
+        return info;
     }
 }

@@ -72,6 +72,14 @@ Battery.prototype.isCharging = function (successCallback, errorCallback) {
         []);
 };
 
+Battery.prototype.getDataBatteryInfo = function (successCallback, errorCallback) {
+    return exec(successCallback,
+        errorCallback,
+        'Battery',
+        'getDataBatteryInfo',
+        []);
+};
+
 /**
  * Event handlers for when callbacks get registered for the battery.
  * Keep track of how many handlers we have so we can start and stop the native battery listener
